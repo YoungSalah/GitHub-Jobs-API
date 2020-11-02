@@ -12,7 +12,6 @@ export default function JobsUI({jobs}) {
             )
         }
     }
-    console.log(newArray, 'new array')
     return (
         <div>
             {newArray}

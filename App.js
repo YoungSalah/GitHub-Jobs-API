@@ -1,5 +1,4 @@
-import React, { useRef, useState } from 'react';
-import axios from 'axios'
+import React, { useState } from 'react';
 import FetchJobs from './FetchJobs'
 import DisplayJobs from './DisplayJobs/DisplayJobs'
 import JobsPagination from './JobsPagination'
@@ -8,11 +7,10 @@ function App() {
   const [param, setParam] = useState({})
   const [page, setPage] = useState(1)
   const {jobs, loading ,error, hasNextPage} = FetchJobs(param, page)
-  console.log(error)
   function onParamChange (e){
-    console.log(1)
     const name = e.target.name
     const value = e.target.value
+    setPage(1)
     setParam(prev =>{
       return{...param,[name]:value}
     })

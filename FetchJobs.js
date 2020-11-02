@@ -11,7 +11,6 @@ const ACTIONS = {
     HAS_NEXT_PAGE: 'has-next-page'
 }
 function reducer(state,action){
-    //console.log(action)
     switch(action.type){
         case ACTIONS.MAKE_REQ:
             return {jobs:[], loading:true, error:null}
@@ -27,8 +26,6 @@ function reducer(state,action){
 }
 export default function FetchJobs(param,page){
     const [state, dispatch] = useReducer(reducer, {jobs: [], loading : true, error:null})
-    let x = { ...param}
-    //console.log(',,,,,,,,,,,,,,,,,,,,,,,',x)
     useEffect(() => {
         const cancelToken1= axios.CancelToken.source()
         const cancelToken2= axios.CancelToken.source()
@@ -42,12 +39,10 @@ export default function FetchJobs(param,page){
                     cancelToken: cancelToken1.token,
                     params :{ page:page, description:param.Description, location: param.Location}
                  }) 
-                 console.log(getResponse)
                 dispatch({type:ACTIONS.GET_DATA, payload:getResponse.data})
             }
             catch(err){
                 if(axios.isCancel(err)) return
-                console.log(err, 'ERRRRRRRRRRRRRRRRRRRRRRRRRROR')
                 dispatch({type:ACTIONS.ERROR, error:err})
             }
             try
@@ -57,7 +52,6 @@ export default function FetchJobs(param,page){
                     params :{ page:page+1, description:param.Description, location: param.Location}
                  })
     
-                console.log('REsponse', HasNextResponse.data.length)
                 dispatch({type:ACTIONS.HAS_NEXT_PAGE, payload:{hasNextPage: HasNextResponse.data.length !== 0}})
             }
             catch(err){
@@ -72,6 +66,5 @@ export default function FetchJobs(param,page){
             cancelToken2.cancel()
         }
     },[param,page])
-   // console.log(state)
     return state
 }

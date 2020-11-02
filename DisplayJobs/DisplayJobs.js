@@ -1,4 +1,4 @@
-import React , {useState} from 'react'
+import React from 'react'
 import JobsUI from './JobsUI'
 import MarkdownPreview from '@uiw/react-markdown-preview';
 export default function DisplayJobs({jobs}) {
@@ -31,8 +31,6 @@ export default function DisplayJobs({jobs}) {
                         </span>
                         <span className="badge badge-secondary  bg-secondary">{job.type}</span>
                             <MarkdownPreview className="card-text" source={job.how_to_apply} /> 
-                        <a href="#" className=" card-link text-dark">more details</a>
-                        <a href="#" className="card-link text-dark">Card link</a>
                         <button className="btn btn-light float-right" data-toggle="collapse" data-target={'#card'+index}>Toggle details</button>
                         <div id={'card'+index} className="collapse mt-4">
                             <MarkdownPreview source={job.description} />
@@ -43,7 +41,6 @@ export default function DisplayJobs({jobs}) {
         )
     })) : null
     
-    //console.log(JobsList, 33333333333333333)
     return (
         <div>
             {JobsList ? <JobsUI jobs={JobsList} /> : '' }
