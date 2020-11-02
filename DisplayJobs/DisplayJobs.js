@@ -3,7 +3,6 @@ import JobsUI from './JobsUI'
 import MarkdownPreview from '@uiw/react-markdown-preview';
 export default function DisplayJobs({jobs}) {
 
-    console.log(jobs.length)//justify-content-md-center
   
    let JobsList =  jobs.length ? (jobs.map( (job,index) => {
         return(
@@ -20,7 +19,7 @@ export default function DisplayJobs({jobs}) {
                          width="100%" height="120"
                          src={job.company_logo} 
                          />
-                         ss
+                         
                         <h6 className="card-subtitle mb-3 mt-5 font-weight-light">
                             {new Date(job.created_at).toLocaleDateString() }
                         </h6>

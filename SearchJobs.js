@@ -25,7 +25,6 @@ export default function SearchJobs({onParamChange,setParam}) {
             </div>  
            
         </div>
-        <button type="submit" class="btn btn-dark" >Fetch</button>  
     </form>
     )
 }

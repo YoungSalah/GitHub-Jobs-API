@@ -16,43 +16,60 @@ function reducer(state,action){
         case ACTIONS.MAKE_REQ:
             return {jobs:[], loading:true, error:null}
         case ACTIONS.GET_DATA:
-            return {jobs:action.payload, loading:false, error:null}
+            return {...state , jobs:action.payload, loading:false, error:null}
         case ACTIONS.ERROR:
-            return {jobs:[], error:action.error, loading:false}
+            return {...state , jobs:[], error:action.error, loading:false}
         case ACTIONS.HAS_NEXT_PAGE:
-            return{hasNextPage:action.payload.hasNextPage}
+            return{...state,  hasNextPage:action.payload.hasNextPage}
         default:
             return state
     }
 }
 export default function FetchJobs(param,page){
     const [state, dispatch] = useReducer(reducer, {jobs: [], loading : true, error:null})
-    console.log(',,,,,,,,,,,,,,,,,,,,,,,', param.Location,param.Description, param)
+    let x = { ...param}
+    //console.log(',,,,,,,,,,,,,,,,,,,,,,,',x)
     useEffect(() => {
-        const cancelToken= axios.CancelToken.source()
+        const cancelToken1= axios.CancelToken.source()
+        const cancelToken2= axios.CancelToken.source()
+
        async function getRequest(){
             try
             {
                 dispatch({type:ACTIONS.MAKE_REQ}) 
+
                 let getResponse  = await axios.get(URL,{
-                    cancelToken: cancelToken.token,
-                    params :{ page:page, Description:param.Description, Location: param.Location}
+                    cancelToken: cancelToken1.token,
+                    params :{ page:page, description:param.Description, location: param.Location}
                  }) 
+                 console.log(getResponse)
                 dispatch({type:ACTIONS.GET_DATA, payload:getResponse.data})
-                
-               /* let HasNextResponse = await axios.get(URL,{
-                    params :{markdown:true, page:page+1, ...param}
-                 })
-                dispatch({type:ACTIONS.HAS_NEXT_PAGE, payload:{hasNextPage: getResponse.data.length !== 0}}) */
             }
             catch(err){
-                console.log(err)
+                if(axios.isCancel(err)) return
+                console.log(err, 'ERRRRRRRRRRRRRRRRRRRRRRRRRROR')
                 dispatch({type:ACTIONS.ERROR, error:err})
             }
+            try
+            {
+                let HasNextResponse = await axios.get(URL,{
+                    cancelToken: cancelToken2.token,
+                    params :{ page:page+1, description:param.Description, location: param.Location}
+                 })
+    
+                console.log('REsponse', HasNextResponse.data.length)
+                dispatch({type:ACTIONS.HAS_NEXT_PAGE, payload:{hasNextPage: HasNextResponse.data.length !== 0}})
+            }
+            catch(err){
+                if(axios.isCancel(err)) return
+                dispatch({type:ACTIONS.ERROR, error:err})
+            }
+       
         }
         getRequest();
         return () =>{
-            cancelToken.cancel()
+            cancelToken1.cancel()
+            cancelToken2.cancel()
         }
     },[param,page])
    // console.log(state)
